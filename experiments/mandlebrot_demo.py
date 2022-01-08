@@ -42,49 +42,49 @@ def run_demo(args, mirror=False):
     while True:
         # read frame
         idx += 1
-        ret_val, img = cam.read()
+        ret_val, styled_frame = cam.read()
         if mirror:
-            img = cv2.flip(img, 1)
-        cimg = img.copy()
-        img = np.array(img).transpose(2, 0, 1)
+            styled_frame = cv2.flip(styled_frame, 1)
+        content_image = styled_frame.copy()
+        styled_frame = np.array(styled_frame).transpose(2, 0, 1)
         # changing style
         if idx % 20 == 1:
             style_v = style_loader.get(int(idx/20))
             style_v = Variable(style_v.data)
             style_model.setTarget(style_v)
 
-        img = torch.from_numpy(img).unsqueeze(0).float()
+        styled_frame = torch.from_numpy(styled_frame).unsqueeze(0).float()
         if args.cuda:
-            img = img.cuda()
+            styled_frame = styled_frame.cuda()
 
-        img = Variable(img)
-        img = style_model(img)
+        styled_frame = Variable(styled_frame)
+        styled_frame = style_model(styled_frame)
         # cv2.imshow("Image", img)
 
         if args.cuda:
-            simg = style_v.cpu().data[0].numpy()
-            img = img.cpu().clamp(0, 255).data[0].numpy()
+            style_image = style_v.cpu().data[0].numpy()
+            styled_frame = styled_frame.cpu().clamp(0, 255).data[0].numpy()
         else:
-            simg = style_v.data.numpy()
-            img = img.clamp(0, 255).data[0].numpy()
-        simg = np.squeeze(simg)
-        img = img.transpose(1, 2, 0).astype('uint8')
-        simg = simg.transpose(1, 2, 0).astype('uint8')
+            style_image = style_v.data.numpy()
+            styled_frame = styled_frame.clamp(0, 255).data[0].numpy()
+        style_image = np.squeeze(style_image)
+        styled_frame = styled_frame.transpose(1, 2, 0).astype('uint8')
+        style_image = style_image.transpose(1, 2, 0).astype('uint8')
         
 
         # display
-        simg = cv2.resize(simg, (swidth, sheight),
+        style_image = cv2.resize(style_image, (swidth, sheight),
                           interpolation=cv2.INTER_CUBIC)
         
-        cimg[0:sheight, 0:swidth, :] = simg
-        cv2.imshow("Left Image", simg)
+        content_image[0:sheight, 0:swidth, :] = style_image
+        cv2.imshow("Left Image", style_image)
         # img = np.concatenate((cimg, img), axis=1)
         # img = np.concatenate((cimg, img), axis=1)
-        cv2.imshow('MSG Demo', img)
+        cv2.imshow('MSG Demo', styled_frame)
         # cv2.imwrite('stylized/%i.jpg'%idx,img)
         key = cv2.waitKey(1)
         if args.record:
-            out.write(img)
+            out.write(styled_frame)
         if key == 27:
             break
     cam.release()
