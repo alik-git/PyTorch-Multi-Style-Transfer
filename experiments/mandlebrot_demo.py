@@ -59,6 +59,7 @@ def run_demo(args, mirror=False):
 
         img = Variable(img)
         img = style_model(img)
+        # cv2.imshow("Image", img)
 
         if args.cuda:
             simg = style_v.cpu().data[0].numpy()
@@ -69,12 +70,16 @@ def run_demo(args, mirror=False):
         simg = np.squeeze(simg)
         img = img.transpose(1, 2, 0).astype('uint8')
         simg = simg.transpose(1, 2, 0).astype('uint8')
+        
 
         # display
         simg = cv2.resize(simg, (swidth, sheight),
                           interpolation=cv2.INTER_CUBIC)
+        
         cimg[0:sheight, 0:swidth, :] = simg
-        img = np.concatenate((cimg, img), axis=1)
+        cv2.imshow("Left Image", simg)
+        # img = np.concatenate((cimg, img), axis=1)
+        # img = np.concatenate((cimg, img), axis=1)
         cv2.imshow('MSG Demo', img)
         # cv2.imwrite('stylized/%i.jpg'%idx,img)
         key = cv2.waitKey(1)
