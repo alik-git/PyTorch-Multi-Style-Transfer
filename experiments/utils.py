@@ -12,6 +12,7 @@ import os
 import imutils
 from datetime import datetime
 import pathlib
+import json
 
 import numpy as np
 import torch
@@ -135,19 +136,26 @@ class StyleLoader():
 
 def getVideoDims(video_cap, dest_height):
     ret_val, src_frame = video_cap.read()
-    print(f"{ret_val=}")
     sized_height, sized_width = 0, 0
     if ret_val:
-        print(f"got here")
         sized_frame = imutils.resize(src_frame, height=dest_height)
         sized_height, sized_width, _ = sized_frame.shape
     return sized_height, sized_width
 
+def saveArgs(output_path, args):
+    with open(f"{output_path}/args.txt", "w") as f:
+        json.dump(args.__dict__, f, indent=2)
 
-def makeOuputPath(input_video, style_option):
+
+def makeOuputFolder():
     now = datetime.now()
     curr_date, curr_time = now.strftime("%m-%d-%Y,%H:%M:%S").split(",")
     output_path = f'outputs/{curr_date}/{curr_time}'
     pathlib.Path(output_path).mkdir(parents=True, exist_ok=True)
-    output_path = f'{output_path}/{input_video.split(".")[0]}_in_{style_option.split(".")[0]}.mp4'
     return output_path
+
+
+def getVideoOutFolder(output_path, input_video, style_option):
+    video_name = input_video.split(".")[0]
+    style_name = style_option.split(".")[0]
+    return f'{output_path}/{video_name}_in_{style_name}.mp4'
