@@ -115,6 +115,10 @@ class Options():
                               help="number of generator filter channels, default 128")
         demo_arg.add_argument("--demo-size", type=int, default=480,
                               help="demo window height, default 480")
+        demo_arg.add_argument("--input-video", type=str, default="flam.mp4",
+                              help="The video to use for style transfer, please place it in experiments/images/content/videos")
+        demo_arg.add_argument("--out-format", type=str, default="full",
+                              help="The format of the output video file. Please choose one of [full, style, out] where full= (input image + input video + output video) or style= (input  image + output video) or out= (output video)")
 
     def parse(self):
         return self.parser.parse_args()

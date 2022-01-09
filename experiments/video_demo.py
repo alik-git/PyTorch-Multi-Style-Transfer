@@ -1,10 +1,9 @@
 import os
 import cv2
+import imutils
 import numpy as np
 import torch
-import pathlib
 from torch.autograd import Variable
-from datetime import datetime
 
 
 from net import Net
@@ -14,6 +13,8 @@ from utils import StyleLoader
 
 
 def run_demo(args, mirror=False):
+
+    # Setup
     style_model = Net(ngf=args.ngf)
     model_dict = torch.load(args.model)
     model_dict_clone = model_dict.copy()
@@ -29,39 +30,37 @@ def run_demo(args, mirror=False):
         style_loader = StyleLoader(args.style_folder, args.style_size, False)
 
     # Define the codec and create VideoWriter object
-    # height = args.demo_size
-    height = 408
-    # width = int(4.0/3*args.demo_size)
-    width = 728
+
+    video_path = f'images/content/videos/{args.input_video}'
+    print(f"{video_path=}")
+
+    height, width = utils.getVideoDims(
+        cv2.VideoCapture(video_path),
+        args.demo_size
+    )
+
     swidth = int(width/4)
     sheight = int(height/4)
-    now = datetime.now()
-    curr_date, curr_time = now.strftime("%m-%d-%Y,%H:%M:%S").split(",")
-    # prr
-    print(f"{style_loader.folder=}")
-    
+    num_styles = len(style_loader.files)
+
     for style_idx, style_option in enumerate(style_loader.files):
-        print(f"\nWorking on style {style_idx} of {len(style_loader.files)}:")
+
+        # Print out current progress 
+        print(f"\nWorking on style {style_idx} of {num_styles}:")
+
+        # Create style loader
         style_v = style_loader.get(int(style_idx))
         style_v = Variable(style_v.data)
         style_model.setTarget(style_v)
         
-        # cam = cv2.VideoCapture(0)
-        # cam = cv2.VideoCapture('images/content/mshloop.mp4')
-        cam = cv2.VideoCapture('images/content/flam.mp4')
+        # cam = cv2.VideoCapture(0) # if you wanna use the webcam
+        cam = cv2.VideoCapture(video_path)
 
         if args.record:
-            fourcc = cv2.VideoWriter_fourcc('F', 'M', 'P', '4')
-            # fourcc = cv2.VideoWriter_fourcc('m', 'p', '4', 'v')
-            # fourcc = cv2.VideoWriter_fourcc(*'XVID')
-
-            output_path = f'outputs/{curr_date}/{curr_time}'
-            pathlib.Path(output_path).mkdir(parents=True, exist_ok=True)
-
-            out = cv2.VideoWriter(
-                f'{output_path}/output_{style_option.split(".")[0]}.mp4', fourcc, 20.0, (width, height))
-            
-        print(f"{width, height=}")
+            # fourcc = cv2.VideoWriter_fourcc('F', 'M', 'P', '4')
+            fourcc = cv2.VideoWriter_fourcc(*'FMP4')
+            output_path = utils.makeOuputPath(args.input_video, style_option)
+            out = cv2.VideoWriter(output_path, fourcc, 20.0, (width, height))
         
         cam.set(3, width)
         cam.set(4, height)
@@ -71,9 +70,13 @@ def run_demo(args, mirror=False):
             # read frame
             idx += 1
             ret_val, styled_frame = cam.read()
-
             if not ret_val:
                 break
+            styled_frame = imutils.resize(styled_frame, width=width)
+            # print(f"after modifying frame")
+            # print(f"{styled_frame.shape=}")
+
+
 
             if mirror:
                 styled_frame = cv2.flip(styled_frame, 1)
