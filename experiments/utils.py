@@ -1,12 +1,12 @@
-##+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-## Created by: Hang Zhang
-## ECE Department, Rutgers University
+# +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+# Created by: Hang Zhang
+# ECE Department, Rutgers University
 ## Email: zhang.hang@rutgers.edu
-## Copyright (c) 2017
+# Copyright (c) 2017
 ##
-## This source code is licensed under the MIT-style license found in the
-## LICENSE file in the root directory of this source tree 
-##+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+# This source code is licensed under the MIT-style license found in the
+# LICENSE file in the root directory of this source tree
+# +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 import os
 import imutils
@@ -21,6 +21,7 @@ from torchfile import load as load_lua
 
 from net import Vgg16
 
+
 def tensor_load_rgbimage(filename, size=None, scale=None, keep_asp=False):
     img = Image.open(filename).convert('RGB')
     if size is not None:
@@ -31,7 +32,8 @@ def tensor_load_rgbimage(filename, size=None, scale=None, keep_asp=False):
             img = img.resize((size, size), Image.ANTIALIAS)
 
     elif scale is not None:
-        img = img.resize((int(img.size[0] / scale), int(img.size[1] / scale)), Image.ANTIALIAS)
+        img = img.resize(
+            (int(img.size[0] / scale), int(img.size[1] / scale)), Image.ANTIALIAS)
     img = np.array(img).transpose(2, 0, 1)
     img = torch.from_numpy(img).float()
     return img
@@ -80,10 +82,11 @@ def add_imagenet_mean_batch(batch):
     mean[:, 2, :, :] = 123.680
     return batch + Variable(mean)
 
+
 def imagenet_clamp_batch(batch, low, high):
-    batch[:,0,:,:].data.clamp_(low-103.939, high-103.939)
-    batch[:,1,:,:].data.clamp_(low-116.779, high-116.779)
-    batch[:,2,:,:].data.clamp_(low-123.680, high-123.680)
+    batch[:, 0, :, :].data.clamp_(low-103.939, high-103.939)
+    batch[:, 1, :, :].data.clamp_(low-116.779, high-116.779)
+    batch[:, 2, :, :].data.clamp_(low-123.680, high-123.680)
 
 
 def preprocess_batch(batch):
@@ -104,7 +107,8 @@ def init_vgg16(model_folder):
         vgg = Vgg16()
         for (src, dst) in zip(vgglua.parameters()[0], vgg.parameters()):
             dst.data[:] = src
-        torch.save(vgg.state_dict(), os.path.join(model_folder, 'vgg16.weight'))
+        torch.save(vgg.state_dict(), os.path.join(
+            model_folder, 'vgg16.weight'))
 
 
 class StyleLoader():
@@ -113,11 +117,11 @@ class StyleLoader():
         self.style_size = style_size
         self.files = os.listdir(style_folder)
         self.cuda = cuda
-    
+
     def get(self, i):
-        idx = i%len(self.files)
+        idx = i % len(self.files)
         filepath = os.path.join(self.folder, self.files[idx])
-        style = tensor_load_rgbimage(filepath, self.style_size)    
+        style = tensor_load_rgbimage(filepath, self.style_size)
         style = style.unsqueeze(0)
         style = preprocess_batch(style)
         if self.cuda:
@@ -128,6 +132,7 @@ class StyleLoader():
     def size(self):
         return len(self.files)
 
+
 def getVideoDims(video_cap, dest_height):
     ret_val, src_frame = video_cap.read()
     print(f"{ret_val=}")
@@ -137,6 +142,7 @@ def getVideoDims(video_cap, dest_height):
         sized_frame = imutils.resize(src_frame, height=dest_height)
         sized_height, sized_width, _ = sized_frame.shape
     return sized_height, sized_width
+
 
 def makeOuputPath(input_video, style_option):
     now = datetime.now()

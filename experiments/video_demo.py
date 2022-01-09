@@ -45,23 +45,22 @@ def run_demo(args, mirror=False):
 
     for style_idx, style_option in enumerate(style_loader.files):
 
-        # Print out current progress 
+        # Print out current progress
         print(f"\nWorking on style {style_idx} of {num_styles}:")
 
         # Create style loader
         style_v = style_loader.get(int(style_idx))
         style_v = Variable(style_v.data)
         style_model.setTarget(style_v)
-        
+
         # cam = cv2.VideoCapture(0) # if you wanna use the webcam
         cam = cv2.VideoCapture(video_path)
 
         if args.record:
-            # fourcc = cv2.VideoWriter_fourcc('F', 'M', 'P', '4')
             fourcc = cv2.VideoWriter_fourcc(*'FMP4')
             output_path = utils.makeOuputPath(args.input_video, style_option)
             out = cv2.VideoWriter(output_path, fourcc, 20.0, (width, height))
-        
+
         cam.set(3, width)
         cam.set(4, height)
         key = 0
@@ -73,15 +72,12 @@ def run_demo(args, mirror=False):
             if not ret_val:
                 break
             styled_frame = imutils.resize(styled_frame, width=width)
-            # print(f"after modifying frame")
-            # print(f"{styled_frame.shape=}")
-
-
 
             if mirror:
                 styled_frame = cv2.flip(styled_frame, 1)
             content_image = styled_frame.copy()
             styled_frame = np.array(styled_frame).transpose(2, 0, 1)
+
             # changing style
             # if idx % 20 == 1:
             #     style_v = style_loader.get(int(idx/20))
@@ -105,18 +101,17 @@ def run_demo(args, mirror=False):
             src_image = np.squeeze(src_image)
             styled_frame = styled_frame.transpose(1, 2, 0).astype('uint8')
             src_image = src_image.transpose(1, 2, 0).astype('uint8')
-            
 
             # display
             src_image = cv2.resize(src_image, (swidth, sheight),
-                            interpolation=cv2.INTER_CUBIC)
-            
+                                   interpolation=cv2.INTER_CUBIC)
+
             content_image[0:sheight, 0:swidth, :] = src_image
             # cv2.imshow("Left Image", style_image)
             # cv2.imshow('MSG Demo', styled_frame)
             # key = cv2.waitKey(1)
             # print(f"{styled_frame.shape=}")
-            
+
             if args.record:
                 out.write(styled_frame)
             if key == 27:
