@@ -30,7 +30,7 @@ Here is an example command:
 
 ```bash
 python video_demo.py demo --model models/21styles.model \
-						  --record 1 \
+			  --record 1 \
 						  --style-folder images/21styles \
 						  --out-format full \
 						  --input-video mzoom.mp4 \
@@ -58,7 +58,7 @@ The `--no-live` argument specifies whether or not to display the live demo as th
 Here is the what the ouput of the following command looks like: 
 ```bash
 python video_demo.py demo --model models/21styles.model   \
-						  --record 1   \
+			  --record 1 \
 						  --style-folder images/21styles   \
 						  --out-format full   \
 						  --input-video flam.mp4   \
