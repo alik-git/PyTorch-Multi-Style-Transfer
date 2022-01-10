@@ -41,8 +41,9 @@ def run_demo(args, mirror=False):
     swidth = int(width/4)
     sheight = int(height/4)
     num_styles = len(style_loader.files)
-    output_path = utils.makeOuputFolder()
-    utils.saveArgs(output_path, args)
+    if args.record:
+        output_path = utils.makeOuputFolder()
+        utils.saveArgs(output_path, args)
 
     # Loop over each style option
     
