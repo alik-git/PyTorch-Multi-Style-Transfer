@@ -1,5 +1,7 @@
 # PyTorch-Style-Transfer for Videos 
 
+![](images/mandlebrot_full_output.gif)
+
 This is a fork of [PyTorch-Style-Transfer](https://github.com/zhanghang1989/PyTorch-Multi-Style-Transfer). I have just made it easier to proccess videos and added some useful bulk processing functionality, other than that all the credit for the amazing style transfer implementation goes to them. For the style transfer logic, please check out their repo [here](https://github.com/zhanghang1989/PyTorch-Multi-Style-Transfer).
 
 The [video_demo.py](experiments/video_demo.py) file allows you to pass a video as input and apply any number of styles to it (provided you have a trained models).
@@ -53,4 +55,16 @@ The `--no-live` argument specifies whether or not to display the live demo as th
 
 ## Sample outputs
 
-Coming soon!
+Here is the what the ouput of the following command looks like: 
+```bash
+python video_demo.py demo --model models/21styles.model   \
+						  --record 1   \
+						  --style-folder images/21styles   \
+						  --out-format full   \
+						  --input-video flam.mp4   \
+						  --demo-size 350   \
+						  --all-at-once   \
+						  --no-live
+```
+
+![](images/flam_full_output.gif)
