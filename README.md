@@ -68,3 +68,11 @@ python video_demo.py demo --model models/21styles.model   \
 ```
 
 [Ouput Here](https://imgur.com/a/Lyeuw11)
+
+
+Also check out: 
+
+[Mandlebrot in different styles](https://imgur.com/a/4QnXNcy)
+
+
+[Infinite Flamingos in different styles](https://imgur.com/a/ylGyxL7)
