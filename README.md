@@ -31,12 +31,12 @@ Here is an example command:
 ```bash
 python video_demo.py demo --model models/21styles.model \
 			  --record 1 \
-						  --style-folder images/21styles \
-						  --out-format full \
-						  --input-video mzoom.mp4 \
-						  --demo-size 350 \
-						  --all-at-once \
-						  --no-live
+			  --style-folder images/21styles \
+			  --out-format full \
+			  --input-video mzoom.mp4 \
+			  --demo-size 350 \
+			  --all-at-once \
+			  --no-live
 ```
 
 The `--record 1` argument saves the output of the run.
@@ -59,12 +59,12 @@ Here is the what the ouput of the following command looks like:
 ```bash
 python video_demo.py demo --model models/21styles.model   \
 			  --record 1 \
-						  --style-folder images/21styles   \
-						  --out-format full   \
-						  --input-video flam.mp4   \
-						  --demo-size 350   \
-						  --all-at-once   \
-						  --no-live
+			  --style-folder images/21styles   \
+			  --out-format full   \
+			  --input-video flam.mp4   \
+			  --demo-size 350   \
+			  --all-at-once   \
+			  --no-live
 ```
 
 [Ouput Here](https://imgur.com/a/Lyeuw11)
