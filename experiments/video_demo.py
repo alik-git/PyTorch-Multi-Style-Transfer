@@ -97,7 +97,7 @@ def run_demo(args, mirror=False):
             curr_frame = np.array(curr_frame).transpose(2, 0, 1)
 
             # If changing through all styles in one video:
-            if args.quickly:
+            if args.all_at_once:
                 if idx % 20 == 1:
                     style_v = style_loader.get(int(idx/20))
                     style_v = Variable(style_v.data)
@@ -157,7 +157,7 @@ def run_demo(args, mirror=False):
             out.release()
         cv2.destroyAllWindows()
 
-        if args.quickly: # only need to loop once
+        if args.all_at_once: # only need to loop once
             break
 
 def main():

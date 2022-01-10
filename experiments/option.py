@@ -122,7 +122,7 @@ class Options():
                               help="The format of the output video file. Please choose one of [full, style, out] where full= (input image + input video + output video) or style= (input  image + output video) or out= (output video)")
         demo_arg.add_argument('--no-live', default=False, action='store_true',
                               help="With this option the live demo is turned off and the output is saved if --record 1 is also set")
-        demo_arg.add_argument('--quickly', default=False, action='store_true',
+        demo_arg.add_argument('--all-at-once', default=False, action='store_true',
                               help="With this option only one video is created in all the styles, each style lasts 20 frames")
         
 
