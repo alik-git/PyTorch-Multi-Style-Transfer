@@ -67,4 +67,3 @@ python video_demo.py demo --model models/21styles.model   \
 						  --no-live
 ```
 
-![](images/flam_full_output.gif)
